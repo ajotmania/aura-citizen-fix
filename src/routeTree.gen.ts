@@ -16,7 +16,9 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthSignupRouteImport } from './routes/auth.signup'
 import { Route as AuthLoginRouteImport } from './routes/auth.login'
-import { Route as AppWargaIndexRouteImport } from './routes/_app.warga.index'
+import { Route as AppWargaRouteImport } from './routes/_app.warga'
+import { Route as AppPetugasRouteImport } from './routes/_app.petugas'
+import { Route as AppAdminRouteImport } from './routes/_app.admin'
 
 const TimRoute = TimRouteImport.update({
   id: '/tim',
@@ -52,9 +54,19 @@ const AuthLoginRoute = AuthLoginRouteImport.update({
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppWargaIndexRoute = AppWargaIndexRouteImport.update({
-  id: '/warga/',
-  path: '/warga/',
+const AppWargaRoute = AppWargaRouteImport.update({
+  id: '/warga',
+  path: '/warga',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPetugasRoute = AppPetugasRouteImport.update({
+  id: '/petugas',
+  path: '/petugas',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => AppRoute,
 } as any)
 
@@ -63,18 +75,22 @@ export interface FileRoutesByFullPath {
   '/fitur': typeof FiturRoute
   '/tentang': typeof TentangRoute
   '/tim': typeof TimRoute
+  '/admin': typeof AppAdminRoute
+  '/petugas': typeof AppPetugasRoute
+  '/warga': typeof AppWargaRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
-  '/warga/': typeof AppWargaIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/fitur': typeof FiturRoute
   '/tentang': typeof TentangRoute
   '/tim': typeof TimRoute
+  '/admin': typeof AppAdminRoute
+  '/petugas': typeof AppPetugasRoute
+  '/warga': typeof AppWargaRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
-  '/warga': typeof AppWargaIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -83,9 +99,11 @@ export interface FileRoutesById {
   '/fitur': typeof FiturRoute
   '/tentang': typeof TentangRoute
   '/tim': typeof TimRoute
+  '/_app/admin': typeof AppAdminRoute
+  '/_app/petugas': typeof AppPetugasRoute
+  '/_app/warga': typeof AppWargaRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
-  '/_app/warga/': typeof AppWargaIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -94,18 +112,22 @@ export interface FileRouteTypes {
     | '/fitur'
     | '/tentang'
     | '/tim'
+    | '/admin'
+    | '/petugas'
+    | '/warga'
     | '/auth/login'
     | '/auth/signup'
-    | '/warga/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/fitur'
     | '/tentang'
     | '/tim'
+    | '/admin'
+    | '/petugas'
+    | '/warga'
     | '/auth/login'
     | '/auth/signup'
-    | '/warga'
   id:
     | '__root__'
     | '/'
@@ -113,9 +135,11 @@ export interface FileRouteTypes {
     | '/fitur'
     | '/tentang'
     | '/tim'
+    | '/_app/admin'
+    | '/_app/petugas'
+    | '/_app/warga'
     | '/auth/login'
     | '/auth/signup'
-    | '/_app/warga/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -179,22 +203,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app/warga/': {
-      id: '/_app/warga/'
+    '/_app/warga': {
+      id: '/_app/warga'
       path: '/warga'
-      fullPath: '/warga/'
-      preLoaderRoute: typeof AppWargaIndexRouteImport
+      fullPath: '/warga'
+      preLoaderRoute: typeof AppWargaRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/petugas': {
+      id: '/_app/petugas'
+      path: '/petugas'
+      fullPath: '/petugas'
+      preLoaderRoute: typeof AppPetugasRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/admin': {
+      id: '/_app/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
       parentRoute: typeof AppRoute
     }
   }
 }
 
 interface AppRouteChildren {
-  AppWargaIndexRoute: typeof AppWargaIndexRoute
+  AppAdminRoute: typeof AppAdminRoute
+  AppPetugasRoute: typeof AppPetugasRoute
+  AppWargaRoute: typeof AppWargaRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
-  AppWargaIndexRoute: AppWargaIndexRoute,
+  AppAdminRoute: AppAdminRoute,
+  AppPetugasRoute: AppPetugasRoute,
+  AppWargaRoute: AppWargaRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
