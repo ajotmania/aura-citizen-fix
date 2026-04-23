@@ -14,16 +14,176 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          address: string | null
+          avatar_url: string | null
+          created_at: string
+          full_name: string
+          id: string
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          avatar_url?: string | null
+          created_at?: string
+          full_name: string
+          id: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string
+          id?: string
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      reports: {
+        Row: {
+          address: string | null
+          category: Database["public"]["Enums"]["report_category"]
+          created_at: string
+          description: string
+          id: string
+          latitude: number
+          longitude: number
+          photo_url: string | null
+          reporter_id: string
+          status: Database["public"]["Enums"]["report_status"]
+          title: string
+          updated_at: string
+          urgency: Database["public"]["Enums"]["urgency_level"]
+        }
+        Insert: {
+          address?: string | null
+          category: Database["public"]["Enums"]["report_category"]
+          created_at?: string
+          description: string
+          id?: string
+          latitude: number
+          longitude: number
+          photo_url?: string | null
+          reporter_id: string
+          status?: Database["public"]["Enums"]["report_status"]
+          title: string
+          updated_at?: string
+          urgency?: Database["public"]["Enums"]["urgency_level"]
+        }
+        Update: {
+          address?: string | null
+          category?: Database["public"]["Enums"]["report_category"]
+          created_at?: string
+          description?: string
+          id?: string
+          latitude?: number
+          longitude?: number
+          photo_url?: string | null
+          reporter_id?: string
+          status?: Database["public"]["Enums"]["report_status"]
+          title?: string
+          updated_at?: string
+          urgency?: Database["public"]["Enums"]["urgency_level"]
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      work_orders: {
+        Row: {
+          assigned_by: string
+          assigned_to: string
+          completed_at: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          proof_photo_url: string | null
+          report_id: string
+          updated_at: string
+        }
+        Insert: {
+          assigned_by: string
+          assigned_to: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          proof_photo_url?: string | null
+          report_id: string
+          updated_at?: string
+        }
+        Update: {
+          assigned_by?: string
+          assigned_to?: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          proof_photo_url?: string | null
+          report_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_orders_report_id_fkey"
+            columns: ["report_id"]
+            isOneToOne: false
+            referencedRelation: "reports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_role: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["app_role"]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "warga" | "petugas" | "admin"
+      report_category: "jalan_berlubang" | "trotoar_rusak" | "pju_mati"
+      report_status:
+        | "pending"
+        | "verified"
+        | "in_progress"
+        | "resolved"
+        | "rejected"
+      urgency_level: "low" | "medium" | "high" | "critical"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +310,17 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["warga", "petugas", "admin"],
+      report_category: ["jalan_berlubang", "trotoar_rusak", "pju_mati"],
+      report_status: [
+        "pending",
+        "verified",
+        "in_progress",
+        "resolved",
+        "rejected",
+      ],
+      urgency_level: ["low", "medium", "high", "critical"],
+    },
   },
 } as const
