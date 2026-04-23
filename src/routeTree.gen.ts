@@ -9,8 +9,26 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TimRouteImport } from './routes/tim'
+import { Route as TentangRouteImport } from './routes/tentang'
+import { Route as FiturRouteImport } from './routes/fitur'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TimRoute = TimRouteImport.update({
+  id: '/tim',
+  path: '/tim',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TentangRoute = TentangRouteImport.update({
+  id: '/tentang',
+  path: '/tentang',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FiturRoute = FiturRouteImport.update({
+  id: '/fitur',
+  path: '/fitur',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +37,61 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/fitur': typeof FiturRoute
+  '/tentang': typeof TentangRoute
+  '/tim': typeof TimRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/fitur': typeof FiturRoute
+  '/tentang': typeof TentangRoute
+  '/tim': typeof TimRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/fitur': typeof FiturRoute
+  '/tentang': typeof TentangRoute
+  '/tim': typeof TimRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/fitur' | '/tentang' | '/tim'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/fitur' | '/tentang' | '/tim'
+  id: '__root__' | '/' | '/fitur' | '/tentang' | '/tim'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  FiturRoute: typeof FiturRoute
+  TentangRoute: typeof TentangRoute
+  TimRoute: typeof TimRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tim': {
+      id: '/tim'
+      path: '/tim'
+      fullPath: '/tim'
+      preLoaderRoute: typeof TimRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tentang': {
+      id: '/tentang'
+      path: '/tentang'
+      fullPath: '/tentang'
+      preLoaderRoute: typeof TentangRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fitur': {
+      id: '/fitur'
+      path: '/fitur'
+      fullPath: '/fitur'
+      preLoaderRoute: typeof FiturRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +104,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  FiturRoute: FiturRoute,
+  TentangRoute: TentangRoute,
+  TimRoute: TimRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
