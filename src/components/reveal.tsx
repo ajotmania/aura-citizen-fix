@@ -10,8 +10,10 @@ interface RevealProps {
 }
 
 /**
- * Scroll-triggered fade-up reveal using IntersectionObserver.
- * Respects prefers-reduced-motion.
+ * Scroll-triggered fade-up reveal.
+ * Reveals immediately if already in viewport on mount (robust against
+ * SSR/hydration timing), observes otherwise, and has a safety fallback so
+ * content can never get stuck invisible.
  */
 export function Reveal({ children, className, delay = 0, as = "div" }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -20,10 +22,19 @@ export function Reveal({ children, className, delay = 0, as = "div" }: RevealPro
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
+
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setVisible(true);
       return;
     }
+
+    // Already in (or near) the viewport on mount → reveal right away.
+    const rect = node.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.95) {
+      requestAnimationFrame(() => setVisible(true));
+      return;
+    }
+
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -34,7 +45,14 @@ export function Reveal({ children, className, delay = 0, as = "div" }: RevealPro
       { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
     );
     io.observe(node);
-    return () => io.disconnect();
+
+    // Safety: never let content stay hidden if the observer misbehaves.
+    const fallback = window.setTimeout(() => setVisible(true), 1500);
+
+    return () => {
+      io.disconnect();
+      window.clearTimeout(fallback);
+    };
   }, []);
 
   const Comp = as as "div";
