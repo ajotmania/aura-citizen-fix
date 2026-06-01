@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteHeader, SiteFooter } from "@/components/site-chrome";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Reveal } from "@/components/reveal";
 
 export const Route = createFileRoute("/tim")({
   head: () => ({
@@ -38,42 +39,66 @@ function TeamPage() {
     <div className="flex min-h-screen flex-col">
       <SiteHeader />
       <main className="flex-1">
-        <section className="container mx-auto px-4 py-20 text-center">
-          <Badge variant="outline" className="border-primary/30 text-primary">Coding Camp 2026 · DBS Foundation</Badge>
-          <h1 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">Tim di balik AURA</h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-            Tiga path, satu misi: membangun ekosistem tata kota yang lebih responsif.
-          </p>
+        {/* HERO */}
+        <section className="relative overflow-hidden grain border-b border-border">
+          <div className="absolute inset-0 grid-pattern opacity-50" />
+          <div
+            className="pointer-events-none absolute -top-32 left-1/2 h-[420px] w-[420px] -translate-x-1/2 rounded-full opacity-25 blur-3xl animate-float-slow"
+            style={{ background: "radial-gradient(closest-side, var(--primary-glow), transparent)" }}
+          />
+          <div className="container relative mx-auto px-4 py-24 text-center">
+            <Reveal>
+              <Badge variant="outline" className="border-primary/30 text-primary">
+                Coding Camp 2026 · DBS Foundation
+              </Badge>
+            </Reveal>
+            <Reveal delay={80}>
+              <h1 className="mt-5 font-serif-display text-5xl tracking-tight text-balance md:text-7xl">
+                Tim di balik <span className="italic text-primary">AURA</span>
+              </h1>
+            </Reveal>
+            <Reveal delay={160}>
+              <p className="mx-auto mt-5 max-w-2xl text-lg text-muted-foreground text-balance">
+                Tiga path, satu misi: membangun ekosistem tata kota yang lebih responsif.
+              </p>
+            </Reveal>
+          </div>
         </section>
 
-        <section className="container mx-auto grid gap-6 px-4 pb-12 md:grid-cols-3">
-          {PATHS.map((p) => (
-            <div key={p.name} className={`rounded-2xl border p-6 ${p.color}`}>
-              <h3 className="text-lg font-semibold">{p.name}</h3>
-              <p className="mt-2 text-sm opacity-80">{p.desc}</p>
-            </div>
+        <section className="container mx-auto grid gap-6 px-4 py-16 md:grid-cols-3">
+          {PATHS.map((p, i) => (
+            <Reveal key={p.name} delay={i * 110}>
+              <div className={`h-full rounded-3xl border p-7 transition-transform hover:-translate-y-1.5 ${p.color}`}>
+                <h3 className="font-serif-display text-2xl">{p.name}</h3>
+                <p className="mt-2 text-sm opacity-80">{p.desc}</p>
+              </div>
+            </Reveal>
           ))}
         </section>
 
-        <section className="container mx-auto px-4 pb-20">
-          <h2 className="text-2xl font-bold tracking-tight">Anggota tim</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Slot placeholder — lengkapi dengan nama, foto, dan tanggung jawab masing-masing anggota.
-          </p>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {PLACEHOLDER_MEMBERS.map((m) => (
-              <div key={m.id} className="flex items-start gap-4 rounded-2xl border border-border bg-card p-5 shadow-soft">
-                <Avatar className="h-14 w-14">
-                  <AvatarFallback className="bg-leaf-gradient text-primary-foreground text-lg">
-                    {m.name.split(" ").map((s) => s[0]).join("").slice(0, 2)}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="font-semibold">{m.name}</p>
-                  <p className="text-xs text-primary">{m.role}</p>
-                  <p className="mt-1 text-sm text-muted-foreground">{m.task}</p>
+        <section className="container mx-auto px-4 pb-24">
+          <Reveal>
+            <h2 className="font-serif-display text-3xl tracking-tight md:text-4xl">Anggota tim</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Slot placeholder — lengkapi dengan nama, foto, dan tanggung jawab masing-masing anggota.
+            </p>
+          </Reveal>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {PLACEHOLDER_MEMBERS.map((m, i) => (
+              <Reveal key={m.id} delay={(i % 3) * 100}>
+                <div className="flex items-start gap-4 rounded-3xl border border-border bg-card p-5 shadow-soft transition-all hover:-translate-y-1 hover:shadow-elev">
+                  <Avatar className="h-14 w-14">
+                    <AvatarFallback className="bg-leaf-gradient text-primary-foreground text-lg">
+                      {m.name.split(" ").map((s) => s[0]).join("").slice(0, 2)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-semibold">{m.name}</p>
+                    <p className="text-xs text-primary">{m.role}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">{m.task}</p>
+                  </div>
                 </div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </section>
